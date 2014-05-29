@@ -1,0 +1,83 @@
+<!-- ROUTING -->
+<section id="routing-section" class="doc-section">
+<a class="top-link" href="#home">back to top</a>
+<h2 id="routing">Routing</h2>
+
+
+<p>Tesla comes with an automatic routing system which should save you the trouble of manually creating routes for your site 99% of the time. The routing is based on the following URI structure:</p>
+
+<pre class="code"><code>http://localhost:3000/controller/action/:id
+</code></pre>
+
+<p>Let's say you called the following url:</p>
+
+<pre class="code"><code>http://localhost:3000/foo/bar
+</code></pre>
+
+<p>The router will attempt to find a matching controller in this order:</p>
+
+<ol>
+<li>app/controllers/fooController.js</li>
+<li>app/controllers/foo/indexController.js</li>
+<li>app/controllers/foo/barController.js </li>
+</ol>
+
+<p>If it does not find a matching controller, it will use <em>app/controllers/autoController.js</em> and attempt to load one of the following views as a last resort:</p>
+
+<ol>
+<li>app/views/foo.js</li>
+<li>app/views/foo/index.js</li>
+<li>app/views/foo/bar.js </li>
+<li>app/views/foo/bar/index.js </li>
+</ol>
+
+
+<p>If it's unable to find a matching controller or view, the router will throw a 404 error.</p>
+
+
+<h3>Custom Routes</h3>
+<p>If the default url scheme doesn't work for your site, you can easily create your own custom routes.</p>
+
+<p>Routes are configured in the <em>app/routes</em> directory. The default router as well as a few sample routes can be found in: <a href="app/routes/_setup.js">app/routes/_setup.js</a></p>
+
+<h4>HELLO WORLD</h4>
+
+<p>This is one of thie simplest routes. If you receive a request to domain.com/hello/world, it will load <a href="app/controllers/hello/worldController.js">app/controllers/hello/worldController</a>.</p>
+
+<pre class="code"><code>app.get("/hello/world", function(req, res) {
+    require(controllers + 'hello/worldController')(app, res, res);
+});
+</code></pre>
+
+
+<h4>FOO BAR</h4>
+
+<p>This example loads the controller directly, and lets it handle its own routing. Take a look at  <a href="app/controllers/fooController.js">app/controllers/fooController</a> if you're curious how it works.</p>
+
+<pre class="code"><code>require(controllers + 'fooController')(app);</code></pre>
+
+
+<h4>DYNAMIC ROUTING</h4>
+
+<p>This example shows how you can use dynamic routing to create RESTful CRUD style urls:</p>
+
+<pre class="code"><code>// EXAMPLE OF CRUD STYLE ROUTER & CONTROLLER
+app.get("/:controller/:action/:id?", function(req, res) {
+    require(controllers + req.params.controller + 'Controller')[req.params.action](app, req, res);
+});</code></pre>
+
+<p>If you have Tesla running, try hitting the following URL's in your browser:</p>
+
+<ul>
+    <li><a href="http://localhost:3000/crud/create">http://localhost:3000/crud/create</a></li>
+    <li><a href="http://localhost:3000/crud/read/12345">http://localhost:3000/crud/read/12345</a></li>
+    <li><a href="http://localhost:3000/crud/read/">http://localhost:3000/crud/read/</a></li>
+    <li><a href="http://localhost:3000/crud/update/12345">http://localhost:3000/crud/update/12345</a></li>
+    <li><a href="http://localhost:3000/delete/12345">http://localhost:3000/delete/12345</a></li>
+</ul>
+
+<p>Have a look at <a href="app/controllers/crudController.js">app/controllers/crudController</a> if you're curious how it works.</p>
+
+
+
+</section>

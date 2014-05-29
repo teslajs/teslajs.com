@@ -1,0 +1,119 @@
+<!-- WORKING WITH DATA -->
+<section id="working-with-data-section" class="doc-section">
+<a class="top-link" href="#home">back to top</a>
+<h2 id="working-with-data">Working with data</h2>
+
+
+<p>Working with data &amp; creating models in Tesla is super easy. It takes only 2 steps:</p>
+
+<p><strong>1. Add your database:</strong><br> To work with data make sure you set the URL for your database (config.db.url) in the <a href="https://github.com/teslajs/tesla.js/blob/master/config/_settigs.js">config file</a>.</p>
+
+<p><strong>2. Generate a new model:</strong><br> let's say you have a collection called "user" you want to use with your app, all you need to do is run the following command:</p>
+
+<pre class="code"><code>$ tesla generate user</code></pre>
+
+<p>This will create 2 new files for you:
+<ul>
+<li>app/models/userModel.js</li>
+<li>app/controllers/userController.js</li>
+</ul>
+</p>
+
+<br>
+
+<h4 id="models">Models</h4>
+
+<p>As long as your databse URL is set properly, this is all you need to do. However, you will almost certainly want to open up your new model and define the schema for your database table/collection.</p>
+
+<p>In this file, you will see a block that looks something like this:</p>
+
+<pre class="code"><code>var Model = db.define("user", {
+    created    : { type: "date", time: true },
+    updated    : { type: "date", time: true }
+    // _id     : { type: "text" },
+    // name    : { type: "text", required: true },
+    // isAdmin : { type: "boolean", defaultValue: false },
+}, {
+    validations: {
+        // EXAMPLE VALIDATIONS
+        // password: orm.enforce.security.password('luns5', 'Passowrd does not meet min security requirements.'),
+        // email: orm.enforce.patterns.email('Please enter a valid email address.')
+        // More Options : https://github.com/dresende/node-enforce
+    }
+});
+</code></pre>
+
+<p>This is wehere you will define what fields you want to be able to access. In the example above, this model only has access to "created" and "updated" fields. But it's almost certain that you will need to add more fields than this. There are a few commented out examples included to get you started.</p>
+
+<p>Tesla uses <a href="https://github.com/dresende/node-orm2" target="_blank">Node-ORM</a> to provide basic ORM functionality &amp; databse abstraction. For more info on definifing models &amp; validations, <a href="https://github.com/dresende/node-orm2/wiki" target="_blank">have a look at the ORM wiki</a>.</p>
+
+<p>Once you have your schema setup, that should be about all you need to do with the model in most cases. But feel free to muck about further down in the file if you need to do some more customization.</p>
+
+<h4 id="controllers">Controllers</h4>
+
+<p>By default, Tesla will serve up your data via a RESTful JSON api. If this is the result you want, you shouldn't need to make any changes to the generated controller. You get the following URI scheme by default:</p>
+
+<pre class="code"><code>http://localhost:3000/user/all                            // retrieve all records
+http://localhost:3000/user/create?data&amp;goes&amp;here          // create a new record
+http://localhost:3000/user/delete/:id                     // delete a record
+http://localhost:3000/user/find?query&amp;terms&amp;here          // search for matching records
+http://localhost:3000/user/update/:id                     // update a record
+</code></pre>
+
+<p>It's worth noting that <strong>delete</strong> &amp; <strong>update</strong> require you to pass the databse ID as a url segment, while <strong>create</strong> &amp; <strong>find</strong> accept arguments via GET parameters. <strong>Create</strong> maps each GET parameter to a field in the databse (POST &amp; PUT support will come in the next iteration). For example, if you want to add the following data to your collection/table:</p>
+
+<pre class="code"><code>name: Bob
+email: bob@marley.com
+</code></pre>
+
+<p>Assuming you've added the fields the the schema in your model, you would simple enter this into the browser:</p>
+
+<pre class="code"><code>http://localhost:3000/user/create?name=Bob&amp;email=bob@marley.com
+</code></pre>
+
+<p>Similarly, if you want to retrieve all the records of people named Bob, you would build a request like this:</p>
+
+<pre class="code"><code>http://localhost:3000/user/find?name=Bob</code></pre>
+
+<p>And you will get back a JSON view similar to this:</p>
+
+<pre class="code"><code>[
+    {
+        name: "Bob"
+        email: "bob@marley.com"
+    },
+    {
+        name: "Bob"
+        email: "bob@dylan.com"
+    }
+]
+</code></pre>
+
+<p>This is the default behavior, but if you would rather serve up a standard html, it's a simple change. Simply open up your <a href="https://github.com/teslajs/tesla.js/blob/master/config/_settigs.js" target="_blank">config file</a> and set "config.api.enabled" to "false". Now it will map the request to the appropriate view (assuming it exists). By default, you get 5 methods (all, create, delete, find, update). Continuing with our user example, you will get the following url > view mapping:</p>
+
+<pre class="code"><code>http://localhost:3000/user/all  &gt;  app/views/user/all
+http://localhost:3000/user/create?data&amp;goes&amp;here  &gt;  app/views/user/create
+http://localhost:3000/user/delete/:id  &gt;  app/views/user/delete
+http://localhost:3000/user/find?query&amp;terms&amp;here  &gt;  app/views/user/find
+http://localhost:3000/user/update/:id  &gt;  app/views/user/update
+</code></pre>
+
+<p>These are all setup in the controller, however you will need to create the appropriate view files or you will get a 404 error. The data from each request (which was previously spit out as a JSON view) will be sent to the view as an object called "data".</p>
+
+</section>
+
+
+
+<!-- VIEWS -->
+<section id="views-section" class="doc-section">
+
+<a class="top-link" href="#home">back to top</a>
+<h2 id="views">Views</h2>
+
+
+<p>Views can use <a href="http://embeddedjs.com/" target="_blank">EJS</a>, <a href="http://handlebarsjs.com/" target="_blank">Handlebars</a>, <a href="http://twitter.github.io/hogan.js/" target="_blank">Hogan.js</a>, <a href="http://jade-lang.com/" target="_blank">Jade</a> (default) or <a href="http://mustache.github.io/" target="_blank">Mustache</a> templates. See the appropriate documentation for your chosen templating language for more info on how to use it.</p>
+
+
+
+
+</section>

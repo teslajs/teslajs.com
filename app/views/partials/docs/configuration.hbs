@@ -1,0 +1,109 @@
+<!-- CONFIG -->
+<section id="configuration-section" class="doc-section">
+<a class="top-link" href="#home">back to top</a>
+<h2 id="configuration">Configuration</h2>
+
+
+<p>All configuration for Tesla is specified in the <a href="config/">config</a> folder, particularly the <a href="config/_settigs.js">config.js</a> file and the <a href="config/environment/">env</a> files. This is where you will need to specify your application name, database connection, and any other settings you would like to customize.</p>
+
+<a class="top-link" href="#home">back to top</a>
+<h5 id="efault-config-file">Default config file: <a href="config/_settigs.js">config.js</a></h5>
+
+<p>Most default settings can be set &amp; updated here:</p>
+
+<pre class="code"><code>app.site = {
+    name : "tesla.js", // the name of your app
+}
+
+app.config = app.site = {
+    name : "tesla-js", // the name of you app
+}
+
+app.config = {
+    port : 3000, // port to run the server on
+
+    prettify : {
+        html : true, // whether to pretify html
+        css : true, // whether to pretify css
+        js : true // whether to pretify js
+    },
+
+    cache : false, // whether to use caching
+
+    api : {
+        enabled : true,
+        format : 'json',
+        access : '*'
+    },
+
+    engines : {
+        html: "hbs", // options: [jade|ejs|haml|hjs|jshtml]
+        css: "stylus", // options: [stylus|sass|less]
+        cssLibrary: false, // options: [nib|axis]
+    },
+    root : rootPath,
+
+    db : {
+        url : "mongodb://<user>:<pass>@mongohq.com:10074/dbname", // url to database
+        driver: "mongodb"
+    },
+
+    jsonp : true, // allow jsonp requests
+    secret : 'MYAPPSECRET',
+    protocol : 'http://',
+    autoLoad : true, // whether to attempt autoload controllers
+    publicDir : './public',
+
+    logging : {
+        console: true, // whether to allow tesla to log messages to the node console
+        files: false // this doesn't do anything yet
+    }
+}
+}
+</code></pre>
+
+<a class="top-link" href="#home">back to top</a>
+<h3 id="environmental-settings">Environmental Settings</h3>
+
+<p>To run with a different environment, just specify NODE_ENV as you call gulp:</p>
+
+<pre class="code"><code>$ NODE_ENV=test gulp
+</code></pre>
+
+<p>If you are using node instead of gulp, it is very similar:</p>
+
+<pre class="code"><code>$ NODE_ENV=test node server
+</code></pre>
+
+<a class="top-link" href="#home">back to top</a>
+<h5 id="development-environment-example">Example config file for "development" environment: <a href="config/environment/development.js">config/environment/development.js</a></h5>
+
+<pre class="code"><code>// GET IP / DOMAIN
+var interfaces = os.networkInterfaces();
+var addresses = [];
+for (k in interfaces) {
+    for (k2 in interfaces[k]) {
+        var address = interfaces[k][k2];
+        if (address.family == 'IPv4' && !address.internal) {
+            addresses.push(address.address)
+        }
+    }
+}
+
+var tesla = require('../../lib/tesla')(app);
+
+// global settings
+app.site.domain = addresses[0];
+app.site.environment = "development";
+app.site.url = app.config.protocol + app.site.domain + ':'  + app.config.port + '/'; // base url
+
+// directories
+app.site.dir = {
+    css : app.site.url + "css/",
+    img : app.site.url + "img/",
+    lib : app.site.url + "lib/",
+    js : app.site.url + "js/"
+};
+</code></pre>
+
+</section>

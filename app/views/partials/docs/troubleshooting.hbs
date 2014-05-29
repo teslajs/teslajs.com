@@ -1,0 +1,40 @@
+<!-- TROUBLESHOOTING -->
+<section id="troubleshooting-section" class="doc-section">
+<a class="top-link" href="#home">back to top</a>
+<h2 id="troubleshooting">Troubleshooting</h2>
+
+
+<p>If you experience any issues during installation, here's a few tips that may help solve many common problems. If none of the below solve your problems, feel free to file a bug in the <a href="https://github.com/teslajs/tesla.js/issues" target="_blank">Github issue tracker</a>.</p>
+
+<h4 id="update-npm-bower-or-gulp">Update NPM, Bower or Gulp</h4>
+
+<p>Sometimes you may find there is a weird error during install like npm's <em>Error: ENOENT</em>, usually updating those tools to the latest version solves the issue.</p>
+
+<h5>Updating NPM:</h5>
+
+<pre class="code"><code>$ npm update -g npm
+</code></pre>
+
+<h5>Updating Gulp:</h5>
+
+<pre class="code"><code>$ npm update -g gulp
+</code></pre>
+
+<h5>Updating Bower:</h5>
+
+<pre class="code"><code>$ npm update -g bower
+</code></pre>
+
+<h4 id="cleaning-npm-and-bower-cache">Cleaning NPM and Bower cache</h4>
+
+<p>NPM and Bower have a caching system for holding packages that you already installed. Cleaeing the cache often solves created by caching.</p>
+
+<h5>NPM Clean Cache:</h5>
+<pre class="code"><code>$ npm cache clean
+</code></pre>
+
+<h5>Bower Clean Cache:</h5>
+
+<pre class="code"><code>$ bower cache clean
+</code></pre>
+</section>
