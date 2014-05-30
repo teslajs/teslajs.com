@@ -6,7 +6,7 @@ module.exports = function (app) {
   var tesla = require('../../lib/tesla')(app);
 
   // global settings
-  app.site.domain = '';
+  app.site.domain = 'teslajs.com';
   app.site.environment = 'production';
   app.site.url = app.config.protocol + app.site.domain + ':'  + app.config.port + '/'; // base url
 
