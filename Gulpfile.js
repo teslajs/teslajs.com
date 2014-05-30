@@ -5,9 +5,17 @@ require('./config/environment/development')(app);
 
 var exit = require('gulp-exit'),
     gulp = require('gulp'),
+    clean = require('gulp-clean'),
+    // concat = require('gulp-concat'),
+    // gutil = require('gulp-util'),
     livereload = require('gulp-livereload'),
     nodemon = require('gulp-nodemon'),
     uglify = require('gulp-uglify'),
+    minifyCSS = require('gulp-minify-css'),
+    imagemin = require('gulp-imagemin'),
+    pngcrush = require('imagemin-pngcrush'),
+    path = require('path'),
+    concat = require('gulp-concat'),
     server = livereload(app.config.liveReload.port),
     paths = {
       app: 'server.js',
@@ -52,7 +60,15 @@ gulp.task('default', ['nodemon', 'css', 'watch']);
 // HEROKU TASK
 gulp.task('heroku', ['nodemon', 'css']);
 
+// CI TASK
+gulp.task('ci', ['css']);
 
+
+// CLEAN OUT BUILD FORLDER BEFORE BUILDING
+gulp.task('clean', function () {
+  return gulp.src(paths.build, {read: false})
+    .pipe(clean());
+});
 
 
 // WATCH FILES FOR CHANGES
@@ -146,7 +162,7 @@ gulp.task('css', function () {
 // THIS BIT IS STILL IN BETA. USE AT YOUR OWN RISK!
 gulp.task('build', function () {
 
-  console.log('Running gulp task "HTML"');
+  console.log('Running gulp task "BUILD"');
 
   var siteData = {
     site : {
@@ -179,8 +195,8 @@ gulp.task('build', function () {
 
   // MINIFY CSS
   console.log( 'Minify CSS from: ' +  paths.css + '.css');
-  gulp.src( paths.css )
-    .pipe(uglify({outSourceMap: true}))
+  gulp.src( paths.css + '.css' )
+    .pipe(minifyCSS({keepBreaks: false}))
     .pipe(gulp.dest( paths.build + 'public/css/' ));
 
   // COPY LIB FILES
@@ -192,6 +208,11 @@ gulp.task('build', function () {
   // COPY IMAGES
   console.log( 'Copy images from: ' +  paths.img );
   gulp.src( paths.img )
+    .pipe(imagemin({
+      progressive: true,
+      svgoPlugins: [{removeViewBox: false}],
+      use: [pngcrush()]
+    }))
     .pipe(gulp.dest( paths.build + 'public/img/' ))
     .pipe( exit() );
 
