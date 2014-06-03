@@ -53,11 +53,11 @@
 
 <p>By default, Tesla will serve up your data via a RESTful JSON api. If this is the result you want, you shouldn't need to make any changes to the generated controller. You get the following URI scheme by default:</p>
 
-<pre class="code"><code>http://localhost:3000/user/all                            // retrieve all records
-http://localhost:3000/user/create?data&amp;goes&amp;here          // create a new record
-http://localhost:3000/user/delete/:id                     // delete a record
-http://localhost:3000/user/find?query&amp;terms&amp;here          // search for matching records
-http://localhost:3000/user/update/:id                     // update a record
+<pre class="code"><code>http://localhost:1856/user/all                            // retrieve all records
+http://localhost:1856/user/create?data&amp;goes&amp;here          // create a new record
+http://localhost:1856/user/delete/:id                     // delete a record
+http://localhost:1856/user/find?query&amp;terms&amp;here          // search for matching records
+http://localhost:1856/user/update/:id                     // update a record
 </code></pre>
 
 <p>It's worth noting that <strong>delete</strong> &amp; <strong>update</strong> require you to pass the databse ID as a url segment, while <strong>create</strong> &amp; <strong>find</strong> accept arguments via GET parameters. <strong>Create</strong> maps each GET parameter to a field in the databse (POST &amp; PUT support will come in the next iteration). For example, if you want to add the following data to your collection/table:</p>
@@ -68,12 +68,12 @@ email: bob@marley.com
 
 <p>Assuming you've added the fields the the schema in your model, you would simple enter this into the browser:</p>
 
-<pre class="code"><code>http://localhost:3000/user/create?name=Bob&amp;email=bob@marley.com
+<pre class="code"><code>http://localhost:1856/user/create?name=Bob&amp;email=bob@marley.com
 </code></pre>
 
 <p>Similarly, if you want to retrieve all the records of people named Bob, you would build a request like this:</p>
 
-<pre class="code"><code>http://localhost:3000/user/find?name=Bob</code></pre>
+<pre class="code"><code>http://localhost:1856/user/find?name=Bob</code></pre>
 
 <p>And you will get back a JSON view similar to this:</p>
 
@@ -91,11 +91,11 @@ email: bob@marley.com
 
 <p>This is the default behavior, but if you would rather serve up a standard html, it's a simple change. Simply open up your <a href="https://github.com/teslajs/tesla.js/blob/master/config/_settigs.js" target="_blank">config file</a> and set "config.api.enabled" to "false". Now it will map the request to the appropriate view (assuming it exists). By default, you get 5 methods (all, create, delete, find, update). Continuing with our user example, you will get the following url > view mapping:</p>
 
-<pre class="code"><code>http://localhost:3000/user/all  &gt;  app/views/user/all
-http://localhost:3000/user/create?data&amp;goes&amp;here  &gt;  app/views/user/create
-http://localhost:3000/user/delete/:id  &gt;  app/views/user/delete
-http://localhost:3000/user/find?query&amp;terms&amp;here  &gt;  app/views/user/find
-http://localhost:3000/user/update/:id  &gt;  app/views/user/update
+<pre class="code"><code>http://localhost:1856/user/all  &gt;  app/views/user/all
+http://localhost:1856/user/create?data&amp;goes&amp;here  &gt;  app/views/user/create
+http://localhost:1856/user/delete/:id  &gt;  app/views/user/delete
+http://localhost:1856/user/find?query&amp;terms&amp;here  &gt;  app/views/user/find
+http://localhost:1856/user/update/:id  &gt;  app/views/user/update
 </code></pre>
 
 <p>These are all setup in the controller, however you will need to create the appropriate view files or you will get a 404 error. The data from each request (which was previously spit out as a JSON view) will be sent to the view as an object called "data".</p>

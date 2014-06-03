@@ -5,13 +5,17 @@
   <a class="top-link" href="#home">back to top</a>
   <h2 id="heroku-quick-deployment">Heroku Quick Deployment</h2>
 
+<p>
+Tesla is configured to work with Heroku out of the box. To delpoy, just open a terminal window and follow these commands (be sure to replace {app_name} with the name of your app):
+</p>
 
-  <p>Before you start, make sure you have <a href="https://toolbelt.heroku.com/" target="_blank">Heroku toolbelt</a> installed and an accessible db instance if you have any models setup.</p>
+<p>Before you start, make sure you have <a href="https://toolbelt.heroku.com/" target="_blank">Heroku toolbelt</a> installed.</p>
 
-  <pre class="code"><code class="bash">git init
-  git add .
-  git commit -m "initial version"
-  heroku apps:create
-  git push heroku master
-  </code></pre>
+<pre class="code"><code class="bash">heroku login // LOGIN
+heroku apps:create {app_name} // CREATE APP
+heroku config:add NODE_ENV=production --remote heroku --app {app_name} // SET ENVIRONMENT
+heroku labs:enable websockets // ENABLE WEB SOCKETS IF DESIRED
+git push heroku master // PUSH TO HEROKU
+</code></pre>
+
 </section>
