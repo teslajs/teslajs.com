@@ -10,10 +10,8 @@ var exit = require('gulp-exit'),
     nodemon = require('gulp-nodemon'),
     uglify = require('gulp-uglify'),
     minifyCSS = require('gulp-minify-css'),
-    imagemin = require('gulp-imagemin'),
-    pngcrush = require('imagemin-pngcrush'),
+    mocha = require('gulp-mocha'),
     path = require('path'),
-    concat = require('gulp-concat'),
     server = livereload(app.config.liveReload.port),
     paths = {
       app: 'server.js',
@@ -49,6 +47,15 @@ var exit = require('gulp-exit'),
   }
 
 
+gulp.task('test', ['mocha']);
+
+gulp.task('mocha', function() {
+
+  gulp.src('test/**/*.js')
+      .pipe(mocha({reporter: 'nyan'}))
+      .pipe(exit());
+
+});
 
 
 // DEFAULT TASK
@@ -58,15 +65,13 @@ gulp.task('default', ['nodemon', 'css', 'watch']);
 // HEROKU TASK
 gulp.task('heroku', ['nodemon', 'css']);
 
-// CI TASK
-gulp.task('test', ['nodemon', 'css']);
-
 
 // CLEAN OUT BUILD FORLDER BEFORE BUILDING
 gulp.task('clean', function () {
   return gulp.src(paths.build, {read: false})
     .pipe(clean());
 });
+
 
 
 // WATCH FILES FOR CHANGES
@@ -206,11 +211,11 @@ gulp.task('build', function () {
   // COPY IMAGES
   console.log( 'Copy images from: ' +  paths.img );
   gulp.src( paths.img )
-    .pipe(imagemin({
-      progressive: true,
-      svgoPlugins: [{removeViewBox: false}],
-      use: [pngcrush()]
-    }))
+    // .pipe(imagemin({
+    //   progressive: true,
+    //   svgoPlugins: [{removeViewBox: false}],
+    //   use: [pngcrush()]
+    // }))
     .pipe(gulp.dest( paths.build + 'public/img/' ))
     .pipe( exit() );
 
