@@ -16,22 +16,21 @@ require('../config/express')(app, tesla); // EXPRESS SETTINGS
 require('../app/routes/default')(app, tesla); // DEFAULT ROUTES
 require('chai').should();
 
-describe('The Server', function(){
-
-		// START THE SERVER AND MAKE SURE WE GET A 200 RESPONSE
-		it('should start.', function (done) {
-
-			server.listen( process.env.PORT || app.config.port);
-
-	      http.get('http://localhost:' + app.config.port, function (res) {
-	        // assert.equal(200, res.statusCode);
-					res.statusCode.should.equal(200);
-	        done();
-	      });
-
-    });
-
-});
+// describe('The Server', function(){
+//
+// 		// START THE SERVER AND MAKE SURE WE GET A 200 RESPONSE
+// 		it('should start', function (done) {
+//
+// 			server.listen( process.env.PORT || app.config.port);
+//
+// 	      http.get('http://localhost:' + app.config.port, function (res) {
+// 					res.statusCode.should.equal(200);
+// 	        done();
+// 	      });
+//
+//     });
+//
+// });
 
 
 describe('Default Environment', function(){

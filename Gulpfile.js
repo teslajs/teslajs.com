@@ -47,9 +47,7 @@ var exit = require('gulp-exit'),
   }
 
 
-gulp.task('test', ['mocha']);
-
-gulp.task('mocha', function() {
+gulp.task('test', function() {
 
   gulp.src('test/**/*.js')
       .pipe(mocha({reporter: 'nyan'}))
