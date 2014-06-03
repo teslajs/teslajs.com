@@ -34,6 +34,7 @@
     "gulp-jade": "~0.5.0",
     "gulp-less": "~1.2.3",
     "gulp-livereload": ">=1.2.0",
+    "gulp-minify-css": "0.3.4",
     "gulp-nodemon": ">=1.0.2",
     "gulp-sass": "~0.7.1",
     "gulp-stylus": "~0.2.1",
@@ -42,6 +43,7 @@
     "gulp-minify-css": "~0.3.4",
     "gulp-imagemin": "~0.5.1",
     "hbs": "latest",
+    "imagemin-pngcrush": "~0.1",
     "MD5": ">=1.2.0",
     "method-override": "~1.0.0",
     "mkdirp": "~0.3.5",
@@ -55,6 +57,5 @@
     "underscore": ">=1.5.2",
     "view-helpers": ">=0.1.3",
     "wrench": "~1.5.8"
-
   }
 }
