@@ -3,16 +3,15 @@ var app = {};
 require('./config/_settings')(app);
 require('./config/environment/development')(app);
 
-var exit = require('gulp-exit'),
-    gulp = require('gulp'),
-    clean = require('gulp-clean'),
+var gulp = require('gulp'),
+    exit = require('gulp-exit'),
     livereload = require('gulp-livereload'),
-    nodemon = require('gulp-nodemon'),
-    uglify = require('gulp-uglify'),
-    minifyCSS = require('gulp-minify-css'),
     mocha = require('gulp-mocha'),
+    nodemon = require('gulp-nodemon'),
     path = require('path'),
     server = livereload(app.config.liveReload.port),
+    sass = require('gulp-sass'),
+    uglify = require('gulp-uglify'),
     paths = {
       app: 'server.js',
       build : app.config.buildDir,
@@ -24,29 +23,14 @@ var exit = require('gulp-exit'),
     };
 
 
-  // CONDITIONAL REQUIREMENTS
+// DEFAULT TASK
+gulp.task('default', ['nodemon', 'css', 'watch']);
 
-  // STYLUS
-  if ( app.config.engines.css === 'stylus' ) {
-    var stylus = require('gulp-stylus');
-  }
-
-  // SASS
-  if ( app.config.engines.css === 'sass' ) {
-    var sass = require('gulp-sass');
-  }
-
-  // LESS
-  if ( app.config.engines.css === 'less' ) {
-    var less = require('gulp-less');
-  }
-
-  // JADE
-  if ( app.config.engines.html === 'jade' ) {
-    var jade = require('gulp-jade');
-  }
+// HEROKU TASK
+gulp.task('heroku', ['nodemon', 'css']);
 
 
+// RUN TESTS
 gulp.task('test', function() {
 
   gulp.src('test/**/*.js')
@@ -55,21 +39,15 @@ gulp.task('test', function() {
 
 });
 
+// RENDER SASS FILES
+gulp.task('css', function () {
 
-// DEFAULT TASK
-gulp.task('default', ['nodemon', 'css', 'watch']);
+  console.log('Compiling Sass');
+  gulp.src('./public/css/*.scss')
+      .pipe(sass({errLogToConsole: true}))
+      .pipe(gulp.dest( app.config.publicDir + 'css'));
 
-
-// HEROKU TASK
-gulp.task('heroku', ['nodemon', 'css']);
-
-
-// CLEAN OUT BUILD FORLDER BEFORE BUILDING
-gulp.task('clean', function () {
-  return gulp.src(paths.build, {read: false})
-    .pipe(clean());
-});
-
+}); // END: CSS TASK
 
 
 // WATCH FILES FOR CHANGES
@@ -121,119 +99,6 @@ gulp.task('watch', function() {
 }); // END: WATCH
 
 
-
-
-// Get and render all .styl files recursively
-gulp.task('css', function () {
-
-    console.log('Running gulp task "CSS"');
-
-    // SASS
-    if ( app.config.engines.css === 'sass' ) {
-      console.log('Compiling Sass');
-      gulp.src('./public/css/*.scss')
-          .pipe(sass({errLogToConsole: true}))
-          .pipe(gulp.dest( app.config.publicDir + 'css'));
-    }
-
-    // STYLUS
-    if ( app.config.engines.css === 'stylus' ) {
-      console.log('Compiling Stylus');
-      gulp.src('./public/css/**/*.styl')
-          .pipe(stylus())
-          .pipe(gulp.dest( app.config.publicDir + 'css'));
-    }
-
-    // LESS
-    if ( app.config.engines.css === 'less' ) {
-      console.log('Compiling Less');
-      gulp.src('./public/css/**/*.less')
-          .pipe(less())
-          .pipe(gulp.dest( app.config.publicDir + 'css'));
-    }
-
-
-
-}); // END: CSS TASK
-
-
-
-
-// BUILD TASK TO RENDER TEMPLATES TO HTML + COPY & MINIFY ASSETS
-// THIS BIT IS STILL IN BETA. USE AT YOUR OWN RISK!
-gulp.task('build', function () {
-
-  console.log('Running gulp task "BUILD"');
-
-  var siteData = {
-    site : {
-      name : app.site.name,
-      dir : {
-        css : '../public/css/',
-        js : '../public/js/',
-        img : '../public/img/',
-        lib : '../public/lib/'
-      }
-    }
-  };
-
-  // PROCESS HTML TEMPLATES
-  if ( app.config.engines.html === 'jade' ) {
-
-    console.log( 'Building HTML from: ' + paths.views + '.jade');
-    gulp.src( paths.views + '.jade' )
-      .pipe(jade({
-        locals: siteData
-      }))
-      .pipe(gulp.dest( paths.build ));
-
-  }
-
-  // MINIFY JS
-  console.log( 'Minify JS from: ' +  paths.js[0] + '.js');
-  gulp.src( paths.js[0] + '.js' )
-    .pipe(gulp.dest( paths.build + 'public/js/' ));
-
-  // MINIFY CSS
-  console.log( 'Minify CSS from: ' +  paths.css + '.css');
-  gulp.src( paths.css + '.css' )
-    .pipe(minifyCSS({keepBreaks: false}))
-    .pipe(gulp.dest( paths.build + 'public/css/' ));
-
-  // COPY LIB FILES
-  console.log( 'Copy lib files from: ' +  paths.lib );
-  gulp.src( paths.lib )
-    .pipe(gulp.dest( paths.build + 'public/lib/' ))
-    .pipe( exit() );
-
-  // COPY IMAGES
-  console.log( 'Copy images from: ' +  paths.img );
-  gulp.src( paths.img )
-    // .pipe(imagemin({
-    //   progressive: true,
-    //   svgoPlugins: [{removeViewBox: false}],
-    //   use: [pngcrush()]
-    // }))
-    .pipe(gulp.dest( paths.build + 'public/img/' ))
-    .pipe( exit() );
-
-}); // END: BUILD TASK
-
-
-
-
-// RELOAD BROWSER ON CHANGE
-gulp.task('reload', function () {
-
-  if ( app.config.liveReload.use === true ) {
-    livereload();
-  }
-
-}); //END: RELOAD TASK
-
-
-
-
 // MONITOR SERVER FOR CHANGES & RESTART
 gulp.task('nodemon', function() {
 
@@ -248,3 +113,13 @@ gulp.task('nodemon', function() {
   .on('restart', ['reload']);
 
 }); // END: NODEMON TASK
+
+
+// RELOAD BROWSER ON CHANGE
+gulp.task('reload', function () {
+
+  if ( app.config.liveReload.use === true ) {
+    livereload();
+  }
+
+}); //END: RELOAD TASK
