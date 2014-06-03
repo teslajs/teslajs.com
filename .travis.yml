@@ -2,13 +2,4 @@ language: node_js
 node_js:
 - '0.10'
 env:
-- NODE_ENV=travis
-services:
-- mongodb
-deploy:
-  provider: heroku
-  api_key:
-    secure: k0+IcWSBFtCcYy16Fix6tUiM3+RzXfbKlSkWDYpPOYFwqxPxK2qJc5fDe8EFa57yXaQWu3MYKjD3diEQDqZkOwbgBigTsecMYAAy6mYzQ7dWi3fuA+Q0Ud0e0DhLc2QGxwkTQCQnmmsDfJZkc/TWT1KDCOhzOEdyknONfyGBdGY=
-  app: tesla-js
-  on:
-    repo: teslajs/teslajs.com
+- NODE_ENV=test
