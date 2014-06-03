@@ -7,3 +7,4 @@ public/lib
 *.sublime-project
 *.sublime-workspace
 _build
+.travis.yml

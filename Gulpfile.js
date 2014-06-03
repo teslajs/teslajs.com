@@ -61,7 +61,7 @@ gulp.task('default', ['nodemon', 'css', 'watch']);
 gulp.task('heroku', ['nodemon', 'css']);
 
 // CI TASK
-gulp.task('ci', ['css']);
+gulp.task('test', ['nodemon', 'css']);
 
 
 // CLEAN OUT BUILD FORLDER BEFORE BUILDING
