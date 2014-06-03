@@ -6,8 +6,6 @@ require('./config/environment/development')(app);
 var exit = require('gulp-exit'),
     gulp = require('gulp'),
     clean = require('gulp-clean'),
-    // concat = require('gulp-concat'),
-    // gutil = require('gulp-util'),
     livereload = require('gulp-livereload'),
     nodemon = require('gulp-nodemon'),
     uglify = require('gulp-uglify'),
