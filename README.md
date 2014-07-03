@@ -2,6 +2,20 @@
 
 Source code for [http://teslajs.com](http://teslajs.com) documentation.
 
+##### INSTALL DEPENDENCIES
+
+```
+$ npm install && tesla install
+```
+
+##### START SERVER
+
+```
+$ tesla
+```
+
+
+
 ***
 
 ##### BUILD STATUS
